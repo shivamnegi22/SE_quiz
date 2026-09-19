@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Software Engineering — 100 MCQ Practice Test</title>
+<style>
+:root{--primary:#2563eb;--green:#16a34a;--red:#dc2626;--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#64748b}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+header{background:linear-gradient(135deg,#172554,#2563eb);color:white;padding:28px 18px;text-align:center;position:sticky;top:0;z-index:5;box-shadow:0 3px 15px #0002}
+header h1{margin:0 0 8px;font-size:clamp(22px,4vw,34px)} header p{margin:0;opacity:.9}
+.wrap{max-width:1000px;margin:24px auto;padding:0 14px}
+.stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
+.badge{background:#fff;border-radius:999px;padding:9px 15px;box-shadow:0 2px 8px #0001;font-weight:700}
+#score{color:var(--primary)} #correct{color:var(--green)} #wrong{color:var(--red)}
+.card{background:var(--card);border-radius:16px;margin:14px 0;padding:20px;box-shadow:0 3px 14px #00000010;border:1px solid #e5e7eb}
+.qhead{font-weight:800;font-size:17px;line-height:1.45;margin-bottom:14px}
+.option{display:block;width:100%;text-align:left;border:2px solid #e2e8f0;background:#fff;border-radius:10px;padding:12px 14px;margin:8px 0;font-size:15px;cursor:pointer;transition:.15s}
+.option:hover:not(.disabled){border-color:var(--primary);background:#eff6ff}
+.option.correct{background:#dcfce7;border-color:var(--green);color:#166534;font-weight:700}
+.option.wrong{background:#fee2e2;border-color:var(--red);color:#991b1b;font-weight:700}
+.option.disabled{cursor:default}
+.feedback{font-weight:700;margin-top:9px;min-height:20px}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:25px 0 45px}
+button.action{border:0;border-radius:10px;padding:12px 18px;background:var(--primary);color:white;font-weight:700;cursor:pointer}
+button.action.secondary{background:#475569}
+.result{display:none;background:#fff;border-radius:16px;padding:22px;text-align:center;margin:20px 0;box-shadow:0 3px 14px #0001}
+.result h2{margin-top:0}.result .big{font-size:38px;font-weight:900;color:var(--primary)}
+.progress{height:8px;background:#dbeafe;border-radius:99px;overflow:hidden;max-width:700px;margin:12px auto}
+#bar{height:100%;width:0;background:#2563eb;transition:.2s}
+footer{text-align:center;color:var(--muted);padding:25px}
+@media(max-width:600px){.card{padding:15px}.option{font-size:14px}}
+</style>
+</head>
+<body>
+<header>
+<h1>Software Engineering — 100 MCQ Practice Test</h1>
+<p>Interactive quiz • Instant feedback • Score tracking</p>
+</header>
+<div class="wrap">
+<div class="stats">
+<div class="badge">Answered: <span id="answered">0</span>/100</div>
+<div class="badge" id="correct">Correct: 0</div>
+<div class="badge" id="wrong">Wrong: 0</div>
+<div class="badge" id="score">Score: 0%</div>
+</div>
+<div class="progress"><div id="bar"></div></div>
+<div id="questions"></div>
+<div class="result" id="result">
+<h2>Quiz Result</h2><div class="big" id="finalScore">0%</div>
+<p id="finalText"></p>
+</div>
+<div class="actions">
+<button class="action" onclick="showResult()">Show Result</button>
+<button class="action secondary" onclick="resetQuiz()">Reset Quiz</button>
+</div>
+</div>
+<footer>Software Engineering MCQ Practice — 100 Questions</footer>
+<script>
+const questions = [["SDLC stands for:", ["Software Design Life Cycle", "Software Development Life Cycle", "System Development Logic Cycle", "Software Data Life Cycle"], 1], ["Which SDLC model follows a sequential approach?", ["Spiral", "Agile", "Waterfall", "Prototype"], 2], ["The Spiral model is primarily:", ["Code-driven", "Risk-driven", "Document-driven", "Cost-driven"], 1], ["Which model is particularly useful when requirements are unclear?", ["Waterfall", "Prototype", "V-Model", "Big Bang"], 1], ["The Incremental model develops software:", ["In a single step", "Without testing", "In multiple increments", "Only after complete documentation"], 2], ["Agile development emphasizes:", ["Fixed requirements", "Responding to change", "No customer involvement", "No testing"], 1], ["Selection of a life cycle model depends on:", ["Project characteristics", "Requirements", "Risk", "All of the above"], 3], ["Which model emphasizes risk analysis in each iteration?", ["Waterfall", "Spiral", "Prototype", "Incremental"], 1], ["In the Waterfall model, changes to requirements are generally:", ["Very easy to incorporate", "Difficult to incorporate", "Automatically handled", "Not relevant"], 1], ["Which model provides software through successive releases?", ["Incremental", "Waterfall", "Spiral", "Prototype"], 0], ["Requirements Engineering is concerned primarily with:", ["Hardware manufacturing", "Identifying and managing software requirements", "Writing only source code", "Database administration"], 1], ["Requirements elicitation means:", ["Coding requirements", "Collecting requirements", "Testing requirements", "Deleting requirements"], 1], ["Which is a requirements elicitation technique?", ["Interview", "Compilation", "Linking", "Debugging"], 0], ["A person affected by or interested in a software system is called a:", ["Compiler", "Stakeholder", "Debugger", "Parser"], 1], ["Which requirement describes what a system should do?", ["Functional requirement", "Non-functional requirement", "Design constraint", "Performance metric"], 0], ["Which is an example of a non-functional requirement?", ["User can log in", "User can print a report", "System response time shall be less than 2 seconds", "User can register"], 2], ["SRS stands for:", ["Software Requirement System", "Software Requirements Specification", "System Requirements Software", "Software Reliability Specification"], 1], ["A good SRS should be:", ["Ambiguous", "Incomplete", "Consistent", "Unverifiable"], 2], ["Which of the following is NOT a desirable property of an SRS?", ["Correctness", "Completeness", "Ambiguity", "Consistency"], 2], ["Requirements analysis attempts to identify:", ["Conflicts", "Dependencies", "Inconsistencies", "All of the above"], 3], ["Software project planning primarily deals with:", ["Planning project resources and activities", "Only writing code", "Only testing", "Only maintenance"], 0], ["LOC stands for:", ["Lines of Complexity", "Lines of Code", "Level of Coding", "Logic of Code"], 1], ["KLOC means:", ["Key Lines of Code", "Thousand Lines of Code", "Kernel Lines of Code", "Known Lines of Code"], 1], ["One major disadvantage of LOC as a size metric is that it is:", ["Completely independent of programming language", "Language dependent", "Impossible to count", "Unrelated to source code"], 1], ["Function Point analysis primarily measures:", ["Hardware speed", "Software functionality", "Number of programmers", "Number of defects only"], 1], ["Which is a component considered in Function Point analysis?", ["External Input", "CPU frequency", "RAM size", "Network bandwidth"], 0], ["Which of the following is NOT a standard Function Point component?", ["External Input", "External Output", "External Inquiry", "CPU Register"], 3], ["Function Points have the advantage of being relatively:", ["Language dependent", "Language independent", "Hardware dependent", "Compiler dependent"], 1], ["COCOMO stands for:", ["Constructive Cost Model", "Computer Cost Model", "Construction Complexity Model", "Code Cost Management Organization"], 0], ["COCOMO is primarily used for:", ["Software cost and effort estimation", "Software testing only", "Database design", "Network configuration"], 0], ["Basic COCOMO estimates effort using:", ["Function points only", "KLOC", "Number of users only", "Number of databases"], 1], ["The basic COCOMO effort equation is:", ["E = a(KLOC)^b", "E = KLOC/a", "E = a+b+KLOC", "E = KLOC²"], 0], ["In COCOMO, E generally represents:", ["Error rate", "Effort", "Efficiency", "Execution time"], 1], ["In the COCOMO equation, KLOC represents:", ["Thousand lines of code", "Total number of classes", "Number of keywords", "Number of modules"], 0], ["Which is a COCOMO project mode?", ["Organic", "Semi-detached", "Embedded", "All of the above"], 3], ["An Organic project is generally:", ["Simple and familiar", "Extremely constrained", "Hardware-critical only", "Always very large"], 0], ["An Embedded project generally has:", ["Very few constraints", "Strong hardware/software constraints", "No requirements", "No testing"], 1], ["Semi-detached projects are generally:", ["Intermediate in complexity", "Always trivial", "Always embedded systems", "Impossible to estimate"], 0], ["A software risk is:", ["A certain event", "An uncertain event that may negatively affect a project", "A programming language", "A testing technique"], 1], ["Which is a software project risk?", ["Staff turnover", "Requirement changes", "Schedule delay", "All of the above"], 3], ["The first major activity in risk management is:", ["Risk identification", "Risk elimination", "Risk coding", "Risk deployment"], 0], ["Risk Exposure is commonly expressed as:", ["Probability × Loss", "Probability + Loss", "Probability − Loss", "Loss / Probability only"], 0], ["Risk monitoring involves:", ["Ignoring identified risks", "Tracking identified risks and their status", "Removing all documentation", "Writing source code"], 1], ["Software design transforms requirements into:", ["Hardware", "An implementation blueprint", "Test data only", "User complaints"], 1], ["Modularity means:", ["Combining all code into one module", "Dividing software into manageable modules", "Removing functions", "Eliminating documentation"], 1], ["A desirable property of a module is:", ["Low cohesion", "High cohesion", "High dependency", "High coupling"], 1], ["Coupling refers to:", ["Relationship/dependency between modules", "Internal relationship within a module", "Number of variables", "Number of test cases"], 0], ["Cohesion refers to:", ["Dependency between modules", "Degree to which elements within a module belong together", "Number of modules", "Number of users"], 1], ["A good software design generally aims for:", ["High coupling and low cohesion", "Low coupling and high cohesion", "High coupling and high cohesion", "Low coupling and low cohesion"], 1], ["Function-oriented design focuses mainly on:", ["Objects", "Functions/processes", "Hardware", "Operating systems"], 1], ["Object-oriented design focuses mainly on:", ["Objects and classes", "Only functions", "Only databases", "Only hardware"], 0], ["DFD stands for:", ["Data Function Design", "Data Flow Diagram", "Design Flow Data", "Data File Diagram"], 1], ["A DFD primarily represents:", ["Data movement through a system", "CPU instructions", "Memory addresses", "Source-code syntax"], 0], ["Which is an object-oriented concept?", ["Encapsulation", "Inheritance", "Polymorphism", "All of the above"], 3], ["Encapsulation means:", ["Combining data and methods into a unit", "Removing data", "Removing methods", "Duplicating classes"], 0], ["Inheritance allows:", ["A class to derive properties/behavior from another class", "Data deletion", "Removal of objects", "Compilation without source code"], 0], ["Polymorphism means:", ["One interface/operation can have different behaviors", "Every class must have one object", "Every object must have one method", "No inheritance is possible"], 0], ["Abstraction means:", ["Showing every implementation detail", "Hiding unnecessary details while representing essential characteristics", "Removing all data", "Removing classes"], 1], ["Software metrics are primarily:", ["Quantitative measures", "Programming languages", "Hardware components", "Testing tools only"], 0], ["Which can be measured using software metrics?", ["Complexity", "Reliability", "Productivity", "All of the above"], 3], ["Token count is related to:", ["Lexical elements of a program", "Number of users", "Hardware components", "Network packets"], 0], ["Which is an example of a programming token?", ["Keyword", "Identifier", "Operator", "All of the above"], 3], ["Fan-in represents:", ["Number of modules calling a module", "Number of modules called by a module", "Number of variables", "Number of defects"], 0], ["Fan-out represents:", ["Number of modules calling a module", "Number of modules called by a module", "Number of users", "Number of test cases"], 1], ["Information flow metrics examine:", ["Movement of information between modules", "CPU temperature", "Network speed only", "User interface color"], 0], ["Metrics analysis can help evaluate:", ["Software quality", "Complexity", "Maintainability", "All of the above"], 3], ["Software reliability refers to:", ["Probability of failure-free operation under specified conditions", "Number of lines of code", "Number of developers", "Program size only"], 0], ["A software failure occurs when:", ["Software does not provide expected service", "Software is successfully executed", "Documentation is complete", "Testing begins"], 0], ["A fault is:", ["A defect that can potentially cause failure", "A successful test", "A software requirement", "A design document"], 0], ["Software quality is concerned with:", ["Satisfaction of requirements and expectations", "Only program size", "Only development cost", "Only execution speed"], 0], ["Which is a software quality attribute?", ["Maintainability", "Reliability", "Usability", "All of the above"], 3], ["Reliability models are used to:", ["Represent/predict software reliability", "Design keyboards", "Create hardware", "Write requirements only"], 0], ["CMM stands for:", ["Capability Maturity Model", "Computer Management Model", "Code Maintenance Model", "Capability Measurement Method"], 0], ["How many maturity levels are traditionally defined in CMM?", ["3", "4", "5", "6"], 2], ["CMM Level 1 is:", ["Defined", "Initial", "Managed", "Optimizing"], 1], ["CMM Level 2 is:", ["Repeatable", "Defined", "Managed", "Optimizing"], 0], ["CMM Level 3 is:", ["Initial", "Repeatable", "Defined", "Managed"], 2], ["CMM Level 4 is:", ["Initial", "Defined", "Managed", "Optimizing"], 2], ["CMM Level 5 is:", ["Initial", "Repeatable", "Managed", "Optimizing"], 3], ["The highest CMM maturity level is:", ["Initial", "Defined", "Managed", "Optimizing"], 3], ["Software testing is primarily performed to:", ["Find defects and evaluate software", "Increase hardware size", "Remove requirements", "Avoid documentation"], 0], ["Functional testing focuses on:", ["What the system does", "Internal code structure only", "Hardware architecture", "Network topology"], 0], ["Functional testing is commonly associated with:", ["Black-box testing", "White-box testing", "Structural testing", "Code inspection only"], 0], ["Structural testing is commonly associated with:", ["Black-box testing", "White-box testing", "Acceptance testing only", "Requirements elicitation"], 1], ["Boundary Value Analysis focuses on:", ["Values near input boundaries", "Only middle values", "Hardware boundaries", "Network boundaries"], 0], ["Equivalence Partitioning divides input data into:", ["Equivalent classes", "Programming languages", "Hardware groups", "Developers"], 0], ["Decision table testing is useful when:", ["Multiple conditions determine outcomes", "There are no conditions", "Hardware is being designed", "Source code is unavailable"], 0], ["Statement coverage measures:", ["Percentage of executable statements executed", "Number of users", "Number of modules only", "Number of requirements"], 0], ["Branch coverage is concerned with:", ["Execution of branches/decision outcomes", "Number of programmers", "Database size", "Requirement documents"], 0], ["Unit testing tests:", ["Individual components/modules", "The complete system only", "The customer", "The development organization"], 0], ["Integration testing tests:", ["Interactions among modules", "Individual statements only", "User requirements only", "Hardware components only"], 0], ["System testing tests:", ["The complete integrated system", "A single function only", "One variable", "One statement"], 0], ["Acceptance testing primarily determines:", ["Whether the system is acceptable to the customer/user", "Whether source code compiles", "Whether a programmer is available", "Whether hardware is manufactured"], 0], ["Debugging is mainly concerned with:", ["Locating and correcting faults", "Collecting requirements", "Estimating project size", "Designing hardware"], 0], ["Regression testing is performed after:", ["Software changes", "Requirements elicitation only", "Hiring developers", "Hardware purchase"], 0], ["Automated testing primarily helps to:", ["Automate execution of test cases", "Eliminate all requirements", "Remove software design", "Eliminate maintenance"], 0], ["Corrective maintenance is performed to:", ["Fix defects", "Adapt to new environments", "Add desired improvements only", "Prevent future defects only"], 0], ["Adaptive maintenance is performed to:", ["Adapt software to environmental changes", "Fix only coding errors", "Remove functionality", "Perform initial development"], 0], ["Reverse engineering primarily involves:", ["Understanding an existing software system", "Developing software from scratch", "Testing only new software", "Deleting source code"], 0], ["Software Configuration Management primarily deals with:", ["Controlling changes and versions of software artifacts", "Increasing CPU speed", "Writing only test cases", "Collecting user requirements"], 0]];
+let answered=0, correct=0, wrong=0, locked=Array(questions.length).fill(false);
+
+function render(){
+ const root=document.getElementById('questions');
+ root.innerHTML='';
+ questions.forEach((q,i)=>{
+   const card=document.createElement('div'); card.className='card'; card.id='q'+i;
+   const head=document.createElement('div'); head.className='qhead';
+   head.textContent=(i+1)+'. '+q[0]; card.appendChild(head);
+   q[1].forEach((opt,j)=>{
+     const b=document.createElement('button'); b.className='option';
+     b.textContent=String.fromCharCode(65+j)+'. '+opt;
+     b.onclick=()=>selectOption(i,j,b);
+     card.appendChild(b);
+   });
+   const fb=document.createElement('div'); fb.className='feedback'; fb.id='fb'+i; card.appendChild(fb);
+   root.appendChild(card);
+ });
+ updateStats();
+}
+function selectOption(i,j,button){
+ if(locked[i]) return;
+ locked[i]=true; answered++;
+ const card=document.getElementById('q'+i);
+ const opts=[...card.querySelectorAll('.option')];
+ opts.forEach(x=>x.classList.add('disabled'));
+ const correctIndex=questions[i][2];
+ if(j===correctIndex){
+   button.classList.add('correct'); correct++;
+   document.getElementById('fb'+i).textContent='✓ Correct!';
+   document.getElementById('fb'+i).style.color='var(--green)';
+ }else{
+   button.classList.add('wrong'); wrong++;
+   opts[correctIndex].classList.add('correct');
+   document.getElementById('fb'+i).textContent='✗ Incorrect — the correct answer is '+String.fromCharCode(65+correctIndex)+'.';
+   document.getElementById('fb'+i).style.color='var(--red)';
+ }
+ updateStats();
+}
+function updateStats(){
+ document.getElementById('answered').textContent=answered;
+ document.getElementById('correct').textContent='Correct: '+correct;
+ document.getElementById('wrong').textContent='Wrong: '+wrong;
+ const pct=answered?Math.round(correct/answered*100):0;
+ document.getElementById('score').textContent='Score: '+pct+'%';
+ document.getElementById('bar').style.width=(answered/questions.length*100)+'%';
+}
+function showResult(){
+ const pct=Math.round(correct/questions.length*100);
+ document.getElementById('result').style.display='block';
+ document.getElementById('finalScore').textContent=pct+'%';
+ document.getElementById('finalText').textContent=`You answered ${answered} of ${questions.length} questions. Correct: ${correct}, Wrong: ${wrong}.`;
+ document.getElementById('result').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function resetQuiz(){
+ answered=correct=wrong=0; locked=Array(questions.length).fill(false);
+ document.getElementById('result').style.display='none'; render();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+render();
+</script>
+</body>
+</html>
